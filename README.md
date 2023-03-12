@@ -5,6 +5,8 @@ Use it if you wish :)
 
 ![Lookin good!](https://raw.githubusercontent.com/haydendonald/BudgetThing/main/img/yes.png)
 
+(and yes you need super precise prices, who doesn't work with 12 decimal points)
+
 # Usage
 1. Download the executable from [here]() otherwise build it following the instructions below.
 2. Run the application and select `Cancel File Selection` to create the example budget file which looks something like this:
