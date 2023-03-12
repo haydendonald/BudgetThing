@@ -76,32 +76,32 @@ function calculateToPeriod(value, originalPeriod, aimedPeriod) {
         case "weekly": {
             switch (originalPeriod) {
                 case "weekly": { return value; }
-                case "fortnightly": { return value / 2.0; }
-                case "monthly": { return value / 4.0; }
-                case "yearly": { return value / 52.1429; }
+                case "fortnightly": { return value * 0.4615; }
+                case "monthly": { return value * 0.2308; }
+                case "yearly": { return value * 0.0192; }
             }
         }
         case "fortnightly": {
             switch (originalPeriod) {
-                case "weekly": { return value * 2.0; }
-                case "fortnightly": { return; }
-                case "monthly": { return value / 2.0; }
-                case "yearly": { return value * 26.07145; }
+                case "weekly": { return value * 2.1667; }
+                case "fortnightly": { return value; }
+                case "monthly": { return value * 0.5; }
+                case "yearly": { return value * 0.0417; }
             }
         }
         case "monthly": {
             switch (originalPeriod) {
-                case "weekly": { return value * 4.0; }
+                case "weekly": { return value * 4.3333; }
                 case "fortnightly": { return value * 2.0; }
                 case "monthly": { return value; }
-                case "yearly": { return value / 13.035725; }
+                case "yearly": { return value * 0.0833; }
             }
         }
         case "yearly": {
             switch (originalPeriod) {
                 case "weekly": { return value * 52.1429; }
-                case "fortnightly": { return value * 26.07145; }
-                case "monthly": { return value * 13.035725; }
+                case "fortnightly": { return value * 24.0; }
+                case "monthly": { return value * 12.0; }
                 case "yearly": { return value; }
             }
         }
