@@ -3,7 +3,7 @@ This is a simple script to help me calculate my budgets with a run down format.
 
 Use it if you wish :)
 
-![Lookin good!](https://github.com/haydendonald/BudgetThing/img/yes.png)
+![Lookin good!](https://raw.githubusercontent.com/haydendonald/BudgetThing/main/img/yes.png)
 
 # Usage
 1. Download the executable from [here]() otherwise build it following the instructions below.
