@@ -1,0 +1,17 @@
+{
+  "name": "budgetthing",
+  "version": "1.0.0",
+  "description": "This is a simple script to help me calculate my budgets with a run down format.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nconf": "^0.12.0",
+    "terminal-kit": "^3.0.0",
+    "select-files-cli": "^0.0.4"
+  }
+}
