@@ -12,9 +12,7 @@ async function writeBudgetJSON(fileName, json) {
     nconf.use("file", { file: `./${fileName}.json` });
     nconf.load();
     for (var i in json) { nconf.set(i, json[i]); }
-    nconf.save(function (error) {
-        console.log(error);
-    });
+    nconf.save();
 }
 
 //Build a new budget file ready for the user to modify
@@ -64,6 +62,10 @@ async function buildBudgetJSON() {
             "purchases": 20,
             "going out": 20,
             "savings": 50
+        },
+        "accounts": {
+            "savings": ["savings"],
+            "fun": ["purchases", "going out"]
         }
     });
 }
@@ -118,6 +120,7 @@ async function processFile(fileLocation) {
     var expenses = nconf.get("expenses");
     var aimedPeriod = nconf.get("outputPeriod");
     var remaining = nconf.get("remaining");
+    var accounts = nconf.get("accounts");
 
     //Validate input TODO
 
@@ -173,7 +176,7 @@ async function processFile(fileLocation) {
 
     //Calculate the left over allocations
     var percentage = 0;
-    for(var i in remaining) {
+    for (var i in remaining) {
         remaining[i] = {
             "amount": currentAmount * (remaining[i] / 100.0),
             "percentage": remaining[i]
@@ -182,26 +185,44 @@ async function processFile(fileLocation) {
     }
 
     //Check if all the remaining funds were allocated
-    if(percentage < 100.0) {
+    if (percentage < 100.0) {
         remaining["unallocated"] = {
             "amount": currentAmount * ((100.0 - percentage) / 100.0),
             "percentage": 100.0 - percentage
         };
     }
-    else if(percentage > 100.0) {
+    else if (percentage > 100.0) {
         term.bgBrightRed("There was an over allocation of remaining funds, please check your remaining percentages!");
         return;
     }
 
 
     term.bgYellow(`There is $${currentAmount} to allocate to the remaining funds ${aimedPeriod}`);
-    for(var i in remaining) {
+    for (var i in remaining) {
         term.yellow(`\n- ${i} (${remaining[i].percentage}%) = $${remaining[i].amount}`);
     }
 
+    term.black("\n\n");
+
+    //Ok calculate what amount(s) should be put into each account
+    term.bgBlue(`Here is the amount you should put into each account ${aimedPeriod}`);
+    for (var i in accounts) {
+        var amount = 0;
+        for (var j in accounts[i]) {
+            for (var k in expenses) {
+                if (k == accounts[i][j]) { amount += expenses[k].amount; break;}
+            }
+            for (var k in remaining) {
+                if (k == accounts[i][j]) { amount += remaining[k].amount; break;}
+            }
+        }
+        term.blue(`\n- ${i} should have $${amount} deposited ${aimedPeriod}\n`);
+    }
 
 
-
+    term.black("\n\n");
+    term.bgGreen("Ok i'm done!");
+    term.black("\n\n");
 }
 
 /**
