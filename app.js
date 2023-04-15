@@ -206,19 +206,33 @@ async function processFile(fileLocation) {
 
     //Ok calculate what amount(s) should be put into each account
     term.bgBlue(`Here is the amount you should put into each account ${aimedPeriod}`);
+    var includedInAccount = {};
     for (var i in accounts) {
         var amount = 0;
         for (var j in accounts[i]) {
             for (var k in expenses) {
-                if (k == accounts[i][j]) { amount += expenses[k].amount; break;}
+                if (k == accounts[i][j]) { amount += expenses[k].amount; includedInAccount[k] = true; break;}
             }
             for (var k in remaining) {
-                if (k == accounts[i][j]) { amount += remaining[k].amount; break;}
+                if (k == accounts[i][j]) { amount += remaining[k].amount; includedInAccount[k] = true; break;}
             }
         }
         term.blue(`\n- ${i} should have $${amount} deposited ${aimedPeriod}\n`);
     }
 
+    //The amounts that are not included will be allocated to the regular account
+    var leftOverAccount = 0;
+    for(var i in expenses) {
+        if(!includedInAccount[i]) {
+            leftOverAccount += expenses[i].amount
+        }
+    }
+    for(var i in remaining) {
+        if(!includedInAccount[i]) {
+            leftOverAccount += remaining[i].amount
+        }
+    }
+    term.blue(`\n- regular should have $${amount} left over after depositing ${aimedPeriod}\n`);
 
     term.black("\n\n");
     term.bgGreen("Ok i'm done!");

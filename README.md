@@ -80,7 +80,7 @@ Use it if you wish :)
 # Building
 * This project uses nexe to compile, install it using `npm i pkg -g`
 * Run the project using `node app.js` while in the project directory
-* Build the project using `pkg app.js` to build the project
+* Build the project using `npm i && pkg .` to build the project
 
 # Warranty?
 This script is pretty basic and may have some calculation issues in it (i wrote this quick) so don't use it to calculate the budget of launching a rocket to space thanks :)
