@@ -232,7 +232,7 @@ async function processFile(fileLocation) {
             leftOverAccount += remaining[i].amount
         }
     }
-    term.blue(`\n- regular should have $${amount} left over after depositing ${aimedPeriod}\n`);
+    term.blue(`\n- regular should have $${leftOverAccount} left over after depositing ${aimedPeriod}\n`);
 
     term.black("\n\n");
     term.bgGreen("Ok i'm done!");
