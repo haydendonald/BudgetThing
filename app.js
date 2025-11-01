@@ -4,6 +4,12 @@ const { selectFiles } = require("select-files-cli");
 term.blue("-".repeat(35));
 term.blue("\nBudget Thing by Hayden Donald\nhttps://github.com/haydendonald\n");
 term.blue("-".repeat(35) + "\n\n");
+
+const file = process.argv[2];
+if (file) {
+    processFile(file);
+    return;
+}
 readBudgetJSON();
 
 //Save a budget file
@@ -114,7 +120,7 @@ async function processFile(fileLocation) {
     var nconf = require("nconf");
     nconf.use("file", { file: fileLocation });
     nconf.load();
-
+    
     //First grab our stuff
     var income = nconf.get("income");
     var expenses = nconf.get("expenses");
