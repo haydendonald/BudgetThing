@@ -213,16 +213,21 @@ async function processFile(fileLocation) {
     //Ok calculate what amount(s) should be put into each account
     term.bgBlue(`Here is the amount you should put into each account ${aimedPeriod}`);
     var includedInAccount = {};
+    var accountCalculations = {};
     for (var i in accounts) {
         var amount = 0;
         for (var j in accounts[i]) {
             for (var k in expenses) {
-                if (k == accounts[i][j]) { amount += expenses[k].amount; includedInAccount[k] = true; break;}
+                if (k == accounts[i][j]) { amount += expenses[k].amount; includedInAccount[k] = true; break; }
             }
             for (var k in remaining) {
-                if (k == accounts[i][j]) { amount += remaining[k].amount; includedInAccount[k] = true; break;}
+                if (k == accounts[i][j]) { amount += remaining[k].amount; includedInAccount[k] = true; break; }
+            }
+            for (var k in accountCalculations) {
+                if (k == accounts[i][j]) { amount += accountCalculations[k]; break; }
             }
         }
+        accountCalculations[i] = amount;
         term.blue(`\n- ${i} should have $${amount} deposited ${aimedPeriod}\n`);
     }
 
