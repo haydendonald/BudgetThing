@@ -114,6 +114,12 @@ function calculateToPeriod(value, originalPeriod, aimedPeriod) {
     }
 }
 
+// Check if an expense object is a leaf (has period + amount directly)
+// rather than a category containing sub-expenses
+function isLeaf(obj) {
+    return obj && obj.hasOwnProperty("period") && obj.hasOwnProperty("amount");
+}
+
 //Process a file
 async function processFile(fileLocation) {
     term.bgGreen();
@@ -156,23 +162,37 @@ async function processFile(fileLocation) {
     term.black("\n\n");
 
     //Calculate our expenses
+    // Supports both flat leaf expenses ({ period, amount }) and
+    // nested category expenses ({ subItem: { period, amount }, ... })
     var totalExpenses = 0;
     for (var i in expenses) {
         var amount = 0;
-        for (var j in expenses[i]) {
-            expenses[i][j].amount = calculateToPeriod(expenses[i][j].amount, expenses[i][j].period, aimedPeriod);
-            amount += expenses[i][j].amount;
+        if (isLeaf(expenses[i])) {
+            // Flat expense e.g. rent: { period: "monthly", amount: 1217 }
+            expenses[i].amount = calculateToPeriod(expenses[i].amount, expenses[i].period, aimedPeriod);
+            amount = expenses[i].amount;
+        } else {
+            // Nested category e.g. car: { insurance: { period, amount }, ... }
+            for (var j in expenses[i]) {
+                if (isLeaf(expenses[i][j])) {
+                    expenses[i][j].amount = calculateToPeriod(expenses[i][j].amount, expenses[i][j].period, aimedPeriod);
+                    amount += expenses[i][j].amount;
+                }
+            }
+            expenses[i].amount = amount;
         }
-        expenses[i].amount = amount;
         totalExpenses += amount;
     }
 
     term.bgRed(`You have a total expenses of $${totalExpenses}, leaving $${currentAmount - totalExpenses} ${aimedPeriod}`);
     for (var i in expenses) {
         term.red(`\n- ${i} totaled to $${expenses[i].amount}, leaving ${currentAmount -= expenses[i].amount} ${aimedPeriod}\n`);
-        for (var j in expenses[i]) {
-            if (j != "amount") {
-                term.red(`\t- ${j} = $${expenses[i][j].amount}\n`);
+        // Only print sub-items for nested categories, not flat leaf expenses
+        if (!isLeaf(expenses[i])) {
+            for (var j in expenses[i]) {
+                if (j != "amount") {
+                    term.red(`\t- ${j} = $${expenses[i][j].amount}\n`);
+                }
             }
         }
     }
